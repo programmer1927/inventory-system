@@ -1,9 +1,10 @@
 import Chart from './Chart.jsx';
+import TopSelling from "./TopSelling.jsx";
 
 function Dashboard({ products }) {
 
-  if (!products) {
-    return <p>Loading...</p>;
+  if (products.length === 0) {
+    return <p>No products yet</p>;
   }
 
   const totalProducts = products.length;
@@ -39,6 +40,9 @@ function Dashboard({ products }) {
           <p className="card-value">{totalValue}/-</p>
         </div>
 
+        <div className="card top-selling-card">
+          <TopSelling products={products} />
+        </div>
       </div>
 
       <Chart products={products} />

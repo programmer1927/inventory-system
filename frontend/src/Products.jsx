@@ -1,47 +1,160 @@
 import { useState } from "react";
-function Products({ products, setProducts }) {
+function Products({ products, setProducts, suppliers }) {
+  // Product detail states
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState("");
   const [price, setPrice] = useState("");
+  const [supplier, setSupplier] = useState("");
+  // For editing
+  const [editingId, setEditingId] = useState(null);
+  // Function to ADD
   const addProduct = async () => {
-    if (!name || !category || !stock || !price) {
-      alert("Please fill all fields");
+    const trimmedName = name.trim();
+    const trimmedCategory = category.trim();
+    if (!trimmedName) {
+      alert("Product name required");
       return;
     }
-    const newProduct = {
-      name,
-      category,
-      stock: Number(stock),
-      price: Number(price)
-    };
-    const res = await fetch("http://localhost:5000/products", {
+    if (!trimmedCategory) {
+      alert("Category required");
+      return;
+    }
+    if (!Number.isFinite(Number(stock)) || Number(stock) < 0) {
+      alert("Invalid stock");
+      return;
+    }
+    if (!Number.isFinite(Number(price)) || Number(price) < 0) {
+      alert("Invalid price");
+      return;
+    }
+    if (!supplier) {
+      alert("Select supplier");
+      return;
+    }
+    try {
+      const res = await fetch("http://localhost:5000/products", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(newProduct)
-    });
+      body: JSON.stringify({
+        name: trimmedName,
+        category: trimmedCategory,
+        stock: Number(stock),
+        price: Number(price),
+        supplierId: supplier
+      })
+      });
+    if (!res.ok) {
+      throw new Error("Failed to add product");
+    }
     const data = await res.json();
     setProducts(prev => [...prev, data]);
     setName("");
     setCategory("");
     setStock("");
     setPrice("");
+    setSupplier("");
+
+  } catch (err) {
+    console.error(err);
+    alert("Error adding product");
+  }
   };
-  // DELETE
+  // Function to DELETE
   const deleteProduct = async (id) => {
     try {
-        const confirmDelete = window.confirm("Are you sure you want to delete?");
-        if (!confirmDelete) return;
-      await fetch(`http://localhost:5000/products/${id}`, {
+      const confirmDelete = window.confirm("Are you sure you want to delete?");
+      if (!confirmDelete) return;
+      const res = await fetch(`http://localhost:5000/products/${id}`, {
         method: "DELETE"
       });
-      setProducts(prev => prev.filter(p => p.id !== id));
+      if (!res.ok) {
+        alert("Failed to delete product");
+        return;
+      }
+      setProducts(prev => prev.filter(p => p._id !== id));
     } catch (err) {
       console.log(err);
+      alert("Error deleting product");
     }
   };
+  // Functions to PATCH
+  const startEdit = (product) => {
+    setEditingId(product._id);
+    setName(product.name);
+    setCategory(product.category);
+    setStock(product.stock);
+    setPrice(product.price);
+    setSupplier(product.supplierId);
+  };
+const handleUpdate = async () => {
+    const trimmedName = name.trim();
+    const trimmedCategory = category.trim();
+    if (!trimmedName) {
+      alert("Product name required");
+      return;
+    }
+    if (!trimmedCategory) {
+      alert("Category required");
+      return;
+    }
+    if (!Number.isFinite(Number(stock)) || Number(stock) < 0) {
+      alert("Invalid stock");
+      return;
+    }
+    if (!Number.isFinite(Number(price)) || Number(price) < 0) {
+      alert("Invalid price");
+      return;
+    }
+    if (!supplier) {
+      alert("Select supplier");
+      return;
+    }
+  try {
+    const res = await fetch(`http://localhost:5000/products/${editingId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: trimmedName,
+        category: trimmedCategory,
+        stock: Number(stock),
+        price: Number(price),
+        supplierId: supplier
+      })
+    });
+    if (!res.ok) {
+      alert("Update failed");
+      return;
+    }
+    const updatedProduct = await res.json();
+    setProducts(prev =>
+      prev.map(p => (p._id === editingId ? updatedProduct : p))
+    );
+    setEditingId(null);
+    setName("");
+    setCategory("");
+    setStock("");
+    setPrice("");
+    setSupplier("");
+
+  } catch (err) {
+    console.error(err);
+    alert("Error while updating");
+  }
+};
+  const cancelEdit = () => {
+    setEditingId(null);
+    setName("");
+    setCategory("");
+    setStock("");
+    setPrice("");
+    setSupplier("");
+  };
+  // Actual Interface
   return (
     <div>
       
@@ -53,7 +166,18 @@ function Products({ products, setProducts }) {
         <input type="text" placeholder="Category" value={category} onChange={(e) => setCategory(e.target.value)}  className="form-input"/>
         <input type="number" placeholder="Stock" value={stock}onChange={(e) => setStock(e.target.value)}  className="form-input"/>
         <input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)}  className="form-input"/>
-        <button className="add-btn" onClick={addProduct}>Add Product</button>
+        <select value={supplier} onChange={(e) => setSupplier(e.target.value)} className="form-input">
+          <option value="">Select Supplier</option>
+          {suppliers?.map(s => (
+            <option key={s._id} value={s._id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
+        <button className="add-btn" onClick={editingId ? handleUpdate : addProduct}>
+          {editingId ? "Update Product" : "Add Product"}
+        </button>
+
       </div>
 
       <div className="table-container">
@@ -65,13 +189,14 @@ function Products({ products, setProducts }) {
               <th>Category</th>
               <th>Stock</th>
               <th>Price</th>
+              <th>Supplier</th>
               <th className="align-right">Action</th>
             </tr>
           </thead>
 
           <tbody>
             {products.map(product => (
-              <tr key={product.id}>
+              <tr key={product._id} className={editingId === product._id ? "editing-row" : ""}>
                 <td className="name">{product.name}</td>
                 <td className="category">{product.category}</td>
 
@@ -81,11 +206,20 @@ function Products({ products, setProducts }) {
                   </span>
                 </td>
 
-                <td className="price">₹{product.price}</td>
+                <td className ="price">₹{product.price}</td>
 
-                <td className="align-right">
-                  <button className="edit-btn">Edit</button>
-                  <button className="delete-btn" onClick={() => deleteProduct(product.id)}>
+                <td>{suppliers.find(s => s._id === product.supplierId)?.name || "Unknown"}</td>
+
+                <td className ="align-right">
+                  <button className ="edit-btn" onClick={() => startEdit(product)}>
+                    Edit
+                  </button>
+                  {editingId === product._id  && (
+                    <button className ="delete-btn" onClick={cancelEdit}>
+                      Cancel
+                    </button>
+                  )}
+                  <button className ="delete-btn" onClick={() => deleteProduct(product._id)}>
                     Delete
                   </button>
                 </td>

@@ -1,7 +1,7 @@
 :root {
   --text: #6b6375;
   --text-h: #08060d;
-  --bg: #fff;
+  --bg: #ffffff;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
   --accent: #aa3bff;
@@ -29,7 +29,7 @@
     font-size: 16px;
   }
 }
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --text: #9ca3af;
     --text-h: #f3f4f6;
@@ -47,7 +47,7 @@
   #social .button-icon {
     filter: invert(1) brightness(2);
   }
-}
+} */
 body {
   margin: 0;
 }
@@ -216,7 +216,7 @@ code {
   font-weight: 600;
 }
 .add-btn {
-  background-color: #df830a;
+  background-color: #09b43c;
   color: white;
   padding: 12px 24px;
   border: none;
@@ -387,7 +387,7 @@ code {
   border-color: #66bb6a;
   box-shadow: 0 0 5px rgba(102, 187, 106, 0.4);
 }
-.add-btn {
+/* .add-btn {
   padding: 12px 24px;
   background-color: #4caf50;
   color: white;
@@ -397,7 +397,10 @@ code {
   font-weight: 500;
   transition: 0.2s;
   white-space : nowrap;
-}
+} */
 .add-btn:hover {
   background-color: #43a047;
+}
+.editing-row {
+  background-color: #fff3cd;
 }

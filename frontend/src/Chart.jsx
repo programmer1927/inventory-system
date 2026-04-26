@@ -14,7 +14,7 @@ function Chart({ products }) {
         {products.map(product => {const height = (product.stock / maxStock) * 200; 
 
           return (
-            <div className="bar-wrapper" key={product.id}>
+            <div className="bar-wrapper" key={product._id}>
                 
               <div className={`bar ${product.stock < 15 ? 'low' : product.stock < 50 ? 'medium' : 'high' }`} style={{ height: `${height}px` }}>
 
