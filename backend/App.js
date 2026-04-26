@@ -19,9 +19,19 @@ const productSchema = new mongoose.Schema({
 const supplierSchema = new mongoose.Schema({
   name: String
 });
+//Stock Movement
+const stockMovementSchema = new mongoose.Schema({
+  productId: String,
+  change: Number,
+  date: {
+    type: Date,
+    default: Date.now
+  }
+});
 // MODELS
 const Product = mongoose.model("Product", productSchema);
 const Supplier = mongoose.model("Supplier", supplierSchema);
+const StockMovement = mongoose.model("StockMovement", stockMovementSchema);
 // //PRODUCTS
 // let products = [];
 // let id = 1;
@@ -49,7 +59,6 @@ exp.get('/products', async (req,res) => {
 // });
 
 //POST
-
 exp.post('/products', async (req,res) => {
     try {
         const { name, category, stock, price, supplierId } = req.body;
@@ -84,6 +93,10 @@ exp.post('/products', async (req,res) => {
             stock: Number(stock),
             price: Number(price),
             supplierId: supplierId
+        });
+        await StockMovement.create({
+            productId: product._id.toString(),
+            change: product.stock
         });
         res.json(product);
     } catch(err) {
@@ -158,6 +171,7 @@ exp.put('/products/:id', async (req, res) => {
 exp.patch('/products/:id', async (req, res) => {
     try {
         const id = req.params.id;
+        const oldProduct = await Product.findById(id);
         const { name, category, stock, price, supplierId } = req.body;
         const update = {};
         if (name !== undefined) {
@@ -176,10 +190,12 @@ exp.patch('/products/:id', async (req, res) => {
             }
             update.category = category.trim();
         }
+        let stockChange = 0;
         if (stock !== undefined) {
             if (!Number.isFinite(Number(stock)) || Number(stock) < 0) {
                 return res.status(400).json({ message: "Invalid stock" });
             }
+            stockChange = Number(stock) - oldProduct.stock;
             update.stock = Number(stock);
         }
             if (price !== undefined) {
@@ -199,6 +215,12 @@ exp.patch('/products/:id', async (req, res) => {
         if (!updated) {
             return res.status(404).json({ message: "Product not found" });
         }
+        if (stock !== undefined && stockChange !== 0) {
+            await StockMovement.create({
+                productId: id,
+                change: stockChange
+            });
+        }  
         res.json(updated);
     } catch(err) {
         console.error(err);
@@ -255,6 +277,24 @@ exp.delete("/suppliers/:id", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Error deleting supplier" });
+    }
+});
+// GET Stock History
+exp.get("/stock-history/:id", async (req, res) => {
+     try {
+        const  id  = req.params.id;
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid product ID" });
+        }
+        const productExists = await Product.findById(id);
+        if (!productExists) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        const data = await StockMovement.find({productId: id}).sort({ date: 1 });
+        res.json(data);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error fetching history" });
     }
 });
 // Port 5000

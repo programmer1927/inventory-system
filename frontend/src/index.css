@@ -116,7 +116,7 @@ code {
 }
 }
 .navbar {
-  background-color: white;
+  background-color: rgb(149, 185, 108);
   padding: 16px 24px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 
@@ -137,13 +137,12 @@ code {
 }
 .navbar-subtitle {
   font-size: 15px;
-  color: #666;
+  color: #e7f5e5;
   margin-top: -4px;
 }
 .sidebar {
   width: 240px;
-  background-color: white;
-  height: calc(100vh - 73px);
+  background-color: #289233b6;   
   border-right: 1px solid #f6dff1;
   padding: 24px 16px;
 
@@ -169,8 +168,8 @@ code {
   text-align: left;
 }
 .sidebar-btn.active {
-  background-color: #DDEEDB;
-  color: #0d8744;
+  background-color: #afe89d;
+  color: #1a5906;
 }
 .dashboard-title {
   font-size: 32px;
@@ -196,11 +195,15 @@ code {
 .card-label {
   color: #666;
   font-size: 15px;
+  text-align: center;
+  padding: 10px;
 }
 .card-value {
   font-size: 42px;
   font-weight: 600;
   margin-top: 12px;
+  text-align: center;
+  padding: 20px;
 }
 .highlight {
   color: #9f3805a9;
@@ -242,7 +245,7 @@ code {
   min-width: 700px;
 }
 .products-table th {
-  text-align: left;
+  text-align: center;
   padding: 16px 12px;
   color: #666;
   font-weight: 500;
@@ -251,6 +254,13 @@ code {
 .products-table td {
   padding: 18px 12px;
   border-bottom: 1px solid #eee;
+}
+.action-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 .name {
   font-weight: 500;
@@ -261,9 +271,9 @@ code {
 .price {
   font-weight: 500;
 }
-.align-right {
+/* .align-right {
   text-align: right;
-}
+} */
 .stock {
   padding: 6px 16px;
   border-radius: 20px;
@@ -387,20 +397,23 @@ code {
   border-color: #66bb6a;
   box-shadow: 0 0 5px rgba(102, 187, 106, 0.4);
 }
-/* .add-btn {
-  padding: 12px 24px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: 0.2s;
-  white-space : nowrap;
-} */
 .add-btn:hover {
   background-color: #43a047;
 }
 .editing-row {
   background-color: #fff3cd;
+}
+.timeline-btn {
+  margin-left: 8px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.timeline-btn:hover {
+  background-color: #45a049;
 }

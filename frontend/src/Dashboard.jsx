@@ -37,10 +37,10 @@ function Dashboard({ products }) {
 
         <div className="card">
           <p className="card-label">Total Value</p>
-          <p className="card-value">{totalValue}/-</p>
+          <p className="card-value">₹{totalValue}</p>
         </div>
 
-        <div className="card top-selling-card">
+        <div className="card">
           <TopSelling products={products} />
         </div>
       </div>

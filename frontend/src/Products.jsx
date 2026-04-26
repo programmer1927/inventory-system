@@ -1,4 +1,5 @@
 import { useState } from "react";
+import TimelineChart from "./TimelineChart";
 function Products({ products, setProducts, suppliers }) {
   // Product detail states
   const [name, setName] = useState("");
@@ -6,6 +7,8 @@ function Products({ products, setProducts, suppliers }) {
   const [stock, setStock] = useState("");
   const [price, setPrice] = useState("");
   const [supplier, setSupplier] = useState("");
+  // For managing stock movement
+  const [selectedProductId, setSelectedProductId] = useState(null);
   // For editing
   const [editingId, setEditingId] = useState(null);
   // Function to ADD
@@ -190,27 +193,25 @@ const handleUpdate = async () => {
               <th>Stock</th>
               <th>Price</th>
               <th>Supplier</th>
-              <th className="align-right">Action</th>
+              <th>Action</th>
             </tr>
           </thead>
 
           <tbody>
-            {products.map(product => (
+            {products.map(product => ([
               <tr key={product._id} className={editingId === product._id ? "editing-row" : ""}>
                 <td className="name">{product.name}</td>
                 <td className="category">{product.category}</td>
-
                 <td>
                   <span className={`stock ${product.stock < 15 ? 'low' : 'ok'}`}>
                     {product.stock}
                   </span>
                 </td>
-
                 <td className ="price">₹{product.price}</td>
 
                 <td>{suppliers.find(s => s._id === product.supplierId)?.name || "Unknown"}</td>
 
-                <td className ="align-right">
+                <td className ="action-cell">
                   <button className ="edit-btn" onClick={() => startEdit(product)}>
                     Edit
                   </button>
@@ -222,9 +223,19 @@ const handleUpdate = async () => {
                   <button className ="delete-btn" onClick={() => deleteProduct(product._id)}>
                     Delete
                   </button>
+                  <button className="timeline-btn" onClick={() => setSelectedProductId(selectedProductId === product._id ? null : product._id)}>
+                    Timeline
+                  </button>
                 </td>
-              </tr>
-            ))}
+              </tr>,
+              selectedProductId === product._id && (
+                <tr key={product._id + "-timeline"}>
+                  <td colSpan="6">
+                    <TimelineChart productId={product._id} />
+                  </td>
+                </tr>
+              )
+            ]))}
           </tbody>
 
         </table>
