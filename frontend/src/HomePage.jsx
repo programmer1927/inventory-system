@@ -28,7 +28,7 @@ function HomePage(){
   <div style={{ display: 'flex', width: '100%' }}>
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <div style={{ flex: 1, padding: '32px' }}>
+      <div style={{ flex: 1, padding: '32px', minWidth: 0, overflow: 'hidden'}}>
       {activeTab === 'dashboard' && <Dashboard products={products} />}
       {activeTab === 'products'&& <Products products={products} setProducts={setProducts} suppliers = {suppliers}/>}
       {activeTab === 'suppliers' && <Suppliers suppliers={suppliers} setSuppliers={setSuppliers} products = {products} />}

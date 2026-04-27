@@ -9,7 +9,11 @@ function Chart({ products }) {
   return (
     <div className="chart-container">
       <h3 className="chart-title">Stock Overview</h3>
-
+      <div className="chart-legend">
+        <span className="legend-item high">High</span>
+        <span className="legend-item medium">Medium</span>
+        <span className="legend-item low">Low</span>
+      </div>
       <div className="chart">
         {products.map(product => {const height = (product.stock / maxStock) * 200; 
 

@@ -44,10 +44,9 @@ function Dashboard({ products }) {
           <TopSelling products={products} />
         </div>
       </div>
-
       <Chart products={products} />
     </div>
   );
 }
 
-export default Dashboard
+export default Dashboard;

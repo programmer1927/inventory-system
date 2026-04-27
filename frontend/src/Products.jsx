@@ -91,8 +91,12 @@ function Products({ products, setProducts, suppliers }) {
     setStock(product.stock);
     setPrice(product.price);
     setSupplier(product.supplierId);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
   };
-const handleUpdate = async () => {
+  const handleUpdate = async () => {
     const trimmedName = name.trim();
     const trimmedCategory = category.trim();
     if (!trimmedName) {
@@ -231,7 +235,7 @@ const handleUpdate = async () => {
               selectedProductId === product._id && (
                 <tr key={product._id + "-timeline"}>
                   <td colSpan="6">
-                    <TimelineChart productId={product._id} />
+                    <TimelineChart productId={product._id} currentStock={product.stock}/>
                   </td>
                 </tr>
               )
