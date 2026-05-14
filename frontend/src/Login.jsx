@@ -10,7 +10,6 @@ function Login({ goToSignup, onLogin }) {
     const savedUser = JSON.parse(localStorage.getItem("user"));
 
     if (savedUser && savedUser.email === email && savedUser.password === password) {
-      alert("Login Successful");
       onLogin();
     } else {
       alert("Invalid Credentials");
