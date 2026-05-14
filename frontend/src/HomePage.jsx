@@ -5,8 +5,7 @@ import Dashboard from './Dashboard.jsx';
 import Products from './Products.jsx';
 import Suppliers from './Suppliers.jsx';
 
-function HomePage(){
-  const [activeTab, setActiveTab] = useState('dashboard');
+function HomePage({ onLogout }) {  const [activeTab, setActiveTab] = useState('dashboard');
   const [products, setProducts] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   //fetch for products
@@ -24,8 +23,8 @@ function HomePage(){
   }, []);
     return(<>
         <div style={{minHeight: '100vh',backgroundColor: '#DDEEDB', fontFamily: 'Arial, sans-serif' }}>
-    <Navbar />
-  <div style={{ display: 'flex', width: '100%' }}>
+<Navbar onLogout={onLogout} />
+          <div style={{ display: 'flex', width: '100%' }}>
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <div style={{ flex: 1, padding: '32px', minWidth: 0, overflow: 'hidden'}}>
