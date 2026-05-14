@@ -10,9 +10,6 @@ function Signup({ goToLogin }) {
     const user = {name,email,password,};
 
     localStorage.setItem("user", JSON.stringify(user));
-
-    alert("Account Created Successfully");
-
     goToLogin();
   };
 
