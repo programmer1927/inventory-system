@@ -17,7 +17,7 @@ function Suppliers({ suppliers, setSuppliers, products }) {
         alert("Supplier already exists");
         return;
       }
-      const res = await fetch("http://localhost:5000/suppliers", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/suppliers`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -44,7 +44,7 @@ function Suppliers({ suppliers, setSuppliers, products }) {
       if (products.some(p => p.supplierId === id)) {
         return alert("Supplier is used in products");
       }
-      const res = await fetch(`http://localhost:5000/suppliers/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/suppliers/${id}`, {
         method: "DELETE"
       });
       if (!res.ok) {
