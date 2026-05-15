@@ -32,9 +32,7 @@ const stockMovementSchema = new mongoose.Schema({
 const Product = mongoose.model("Product", productSchema);
 const Supplier = mongoose.model("Supplier", supplierSchema);
 const StockMovement = mongoose.model("StockMovement", stockMovementSchema);
-// //PRODUCTS
-// let products = [];
-// let id = 1;
+// PRODUCTS
 
 //GET
 exp.get('/products', async (req,res) => {
@@ -46,17 +44,6 @@ exp.get('/products', async (req,res) => {
     res.status(500).json({ message: "Error fetching products" });
     }
 });
-// exp.get('/products/:id', (req,res) => {
-//     const id = parseInt(req.params.id);
-//     if (isNaN(id)) {
-//         return res.status(400).json({ message: "Invalid ID" });
-//     }
-//     const product = products.find(product => product.id === id);
-//     if(!product) {
-//         return res.status(404).json({message: `Product with id: ${id} not found`});
-//     }
-//     res.json(product);
-// });
 
 //POST
 exp.post('/products', async (req,res) => {
@@ -227,9 +214,7 @@ exp.patch('/products/:id', async (req, res) => {
     res.status(500).json({ message: "Error updating product" });
     }
 });
-// // SUPPLIERS
-// let suppliers = [];
-// let supplierId = 1;
+// SUPPLIERS
 // GET
 exp.get("/suppliers", async (req, res) => {
     try {
