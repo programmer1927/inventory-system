@@ -5,7 +5,7 @@ const exp = express();
 exp.use(cors());
 exp.use(express.json());
 //MONGODB CONNECTION
-mongoose.connect("mongodb://localhost:27017/inventory").then(() => console.log("MongoDB connected")).catch(err => console.log(err));
+mongoose.connect(process.env.MONGO_URL).then(() => console.log("MongoDB connected")).catch(err => console.log(err));
 //SCHEMA
 // Product
 const productSchema = new mongoose.Schema({
@@ -283,6 +283,6 @@ exp.get("/stock-history/:id", async (req, res) => {
     }
 });
 // Port 5000
-exp.listen(5000, () => {
+exp.listen(process.env.PORT, () => {
     console.log("Server running on port 5000")
 });

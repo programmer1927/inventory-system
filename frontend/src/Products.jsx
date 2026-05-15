@@ -12,38 +12,43 @@ function Products({ products, setProducts, suppliers }) {
   // For editing
   const [editingId, setEditingId] = useState(null);
   // Function to ADD
-  const addProduct = async () => {
+  const validateProduct = () => {
     const trimmedName = name.trim();
     const trimmedCategory = category.trim();
     if (!trimmedName) {
       alert("Product name required");
-      return;
+      return false;
     }
     if (!trimmedCategory) {
       alert("Category required");
-      return;
+      return false;
     }
     if (!Number.isFinite(Number(stock)) || Number(stock) < 0) {
       alert("Invalid stock");
-      return;
+      return false;
     }
     if (!Number.isFinite(Number(price)) || Number(price) < 0) {
       alert("Invalid price");
-      return;
+      return false;
     }
     if (!supplier) {
       alert("Select supplier");
-      return;
+      return false;
     }
+    return true;
+  };
+  const addProduct = async () => {
+    if(!validateProduct())
+      return;
     try {
-      const res = await fetch("http://localhost:5000/products", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/products`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        name: trimmedName,
-        category: trimmedCategory,
+        name: name.trim(),
+        category: category.trim(),
         stock: Number(stock),
         price: Number(price),
         supplierId: supplier
@@ -70,7 +75,7 @@ function Products({ products, setProducts, suppliers }) {
     try {
       const confirmDelete = window.confirm("Are you sure you want to delete?");
       if (!confirmDelete) return;
-      const res = await fetch(`http://localhost:5000/products/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/products/${id}`, {
         method: "DELETE"
       });
       if (!res.ok) {
@@ -97,37 +102,17 @@ function Products({ products, setProducts, suppliers }) {
     });
   };
   const handleUpdate = async () => {
-    const trimmedName = name.trim();
-    const trimmedCategory = category.trim();
-    if (!trimmedName) {
-      alert("Product name required");
+    if(!validateProduct())
       return;
-    }
-    if (!trimmedCategory) {
-      alert("Category required");
-      return;
-    }
-    if (!Number.isFinite(Number(stock)) || Number(stock) < 0) {
-      alert("Invalid stock");
-      return;
-    }
-    if (!Number.isFinite(Number(price)) || Number(price) < 0) {
-      alert("Invalid price");
-      return;
-    }
-    if (!supplier) {
-      alert("Select supplier");
-      return;
-    }
   try {
-    const res = await fetch(`http://localhost:5000/products/${editingId}`, {
+    const res = await fetch(`{import.meta.env.VITE_API_URL}/products/${editingId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        name: trimmedName,
-        category: trimmedCategory,
+        name: name.trim(),
+        category: category.trim(),
         stock: Number(stock),
         price: Number(price),
         supplierId: supplier
@@ -153,14 +138,14 @@ function Products({ products, setProducts, suppliers }) {
     alert("Error while updating");
   }
 };
-  const cancelEdit = () => {
+const cancelEdit = () => {
     setEditingId(null);
     setName("");
     setCategory("");
     setStock("");
     setPrice("");
     setSupplier("");
-  };
+};
   // Actual Interface
   return (
     <div>
