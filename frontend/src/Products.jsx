@@ -1,6 +1,6 @@
 import { useState } from "react";
 import TimelineChart from "./TimelineChart";
-function Products({ products, setProducts, suppliers }) {
+function Products({ products, setProducts, suppliers, token }) {
   // Product detail states
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
@@ -44,7 +44,8 @@ function Products({ products, setProducts, suppliers }) {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/products`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify({
         name: name.trim(),
@@ -76,7 +77,8 @@ function Products({ products, setProducts, suppliers }) {
       const confirmDelete = window.confirm("Are you sure you want to delete?");
       if (!confirmDelete) return;
       const res = await fetch(`${import.meta.env.VITE_API_URL}/products/${id}`, {
-        method: "DELETE"
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
       });
       if (!res.ok) {
         alert("Failed to delete product");
@@ -105,10 +107,11 @@ function Products({ products, setProducts, suppliers }) {
     if(!validateProduct())
       return;
   try {
-    const res = await fetch(`{import.meta.env.VITE_API_URL}/products/${editingId}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/products/${editingId}`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` 
       },
       body: JSON.stringify({
         name: name.trim(),

@@ -6,17 +6,17 @@ const registerUser = async (req, res) => {
     try {
         const {name, email, password} = req.body
         if(!name) {
-            res.status(400).json({ message : "Name required" });
+            return res.status(400).json({ message : "Name required" });
         }
         if(!email) {
-            res.status(400).json({ message : "Email required" });
+            return res.status(400).json({ message : "Email required" });
         }
         if(!password) {
-            res.status(400).json({ message : "Password required" });         
+            return res.status(400).json({ message : "Password required" });         
         }
         const exists = await User.findOne({email});
         if(exists) {
-            res.status(400).json({ message : "User already exists" });         
+            return res.status(400).json({ message : "User already exists" });         
         }
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);

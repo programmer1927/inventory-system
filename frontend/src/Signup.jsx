@@ -5,11 +5,16 @@ function Signup({ goToLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignup = (e) => {e.preventDefault();
-
-    const user = {name,email,password,};
-
-    localStorage.setItem("user", JSON.stringify(user));
+  const handleSignup = async (e) => {e.preventDefault();
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/users/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      return alert(data.message);
+    }
     goToLogin();
   };
 

@@ -5,32 +5,35 @@ import Dashboard from './Dashboard.jsx';
 import Products from './Products.jsx';
 import Suppliers from './Suppliers.jsx';
 
-function HomePage({ onLogout }) {  const [activeTab, setActiveTab] = useState('dashboard');
+function HomePage({ onLogout, token }) {  const [activeTab, setActiveTab] = useState('dashboard');
   const [products, setProducts] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   //fetch for products
   useEffect(() => {
-    fetch("http://localhost:5000/products").then(res => res.json())
+    fetch(`${import.meta.env.VITE_API_URL}/products`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    }).then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => console.log(err));
   }, []);
   //fetch for suppliers
   useEffect(() => {
-    fetch("http://localhost:5000/suppliers")
+    fetch(`${import.meta.env.VITE_API_URL}/suppliers`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    })
       .then(res => res.json())
       .then(data => setSuppliers(data))
       .catch(err => console.log(err));
   }, []);
     return(<>
-        <div style={{minHeight: '100vh',backgroundColor: '#DDEEDB', fontFamily: 'Arial, sans-serif' }}>
-<Navbar onLogout={onLogout} />
-          <div style={{ display: 'flex', width: '100%' }}>
+      <div style={{minHeight: '100vh',backgroundColor: '#DDEEDB', fontFamily: 'Arial, sans-serif' }}>
+      <Navbar onLogout={onLogout} />
+      <div style={{ display: 'flex', width: '100%' }}>
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-
       <div style={{ flex: 1, padding: '32px', minWidth: 0, overflow: 'hidden'}}>
       {activeTab === 'dashboard' && <Dashboard products={products} />}
-      {activeTab === 'products'&& <Products products={products} setProducts={setProducts} suppliers = {suppliers}/>}
-      {activeTab === 'suppliers' && <Suppliers suppliers={suppliers} setSuppliers={setSuppliers} products = {products} />}
+      {activeTab === 'products'&& <Products products={products} setProducts={setProducts} suppliers = {suppliers} token = {token}/>}
+      {activeTab === 'suppliers' && <Suppliers suppliers={suppliers} setSuppliers={setSuppliers} products = {products} token = {token}/>}
       </div>
     </div>
 

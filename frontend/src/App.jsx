@@ -6,15 +6,20 @@ import Login from "./Login.jsx";
 import Signup from "./Signup.jsx";
 
 function App() {
-  const [page, setPage] = useState("cover");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [page, setPage] = useState(sessionStorage.getItem("token") ? "home" : "cover");
+  const [token, setToken] = useState(sessionStorage.getItem("token") || null);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!sessionStorage.getItem("token"));
 
-  const handleLogin = () => {
+  const handleLogin = (tok) => {
+    sessionStorage.setItem("token", tok);
+    setToken(tok);
     setIsAuthenticated(true);
     setPage("home");
   };
 
   const handleLogout = () => {
+    sessionStorage.removeItem("token");
+    setToken(null);
     setIsAuthenticated(false);
     setPage("login");
   };
@@ -32,7 +37,7 @@ function App() {
       )}
 
       {page === "home" && isAuthenticated && (
-        <HomePage onLogout={handleLogout} />
+        <HomePage onLogout={handleLogout} token={token}/>
       )}
     </>
   );

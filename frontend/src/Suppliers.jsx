@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Suppliers({ suppliers, setSuppliers, products }) {
+function Suppliers({ suppliers, setSuppliers, products, token }) {
   const [name, setName] = useState("");
 // Add function
   const addSupplier = async () => {
@@ -20,7 +20,8 @@ function Suppliers({ suppliers, setSuppliers, products }) {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/suppliers`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` 
         },
         body: JSON.stringify({ name: trimmedName })
       });
@@ -45,7 +46,8 @@ function Suppliers({ suppliers, setSuppliers, products }) {
         return alert("Supplier is used in products");
       }
       const res = await fetch(`${import.meta.env.VITE_API_URL}/suppliers/${id}`, {
-        method: "DELETE"
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
       });
       if (!res.ok) {
         alert("Error deleting supplier");
