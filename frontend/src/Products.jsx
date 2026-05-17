@@ -223,7 +223,7 @@ const cancelEdit = () => {
               selectedProductId === product._id && (
                 <tr key={product._id + "-timeline"}>
                   <td colSpan="6">
-                    <TimelineChart productId={product._id} currentStock={product.stock}/>
+                    <TimelineChart productId={product._id} currentStock={product.stock} token={token}/>
                   </td>
                 </tr>
               )

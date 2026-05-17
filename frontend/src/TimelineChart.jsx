@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid} from "recharts";
 
-function TimelineChart({ productId, currentStock  }) {
+function TimelineChart({ productId, currentStock , token }) {
   const [points, setPoints] = useState([]);
 
   useEffect(() => {
     async function load() {
-      const res = await fetch(
-        `http://localhost:5000/stock-history/${productId}`
-      );
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/stock-history/${productId}`, { 
+        headers: { "Authorization": `Bearer ${token}` } 
+      });
       const data = await res.json();
       let total = currentStock || 0;
       const reversed = [...data].reverse();
